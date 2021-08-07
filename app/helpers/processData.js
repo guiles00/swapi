@@ -1,23 +1,23 @@
 const getName = require("./getName");
 
-function processData(data){
+async function processData(data){
   
- const planets = data.map(async (planet)=>{
-    
+  const planets = data.map(async (planet) => {
+
+    //Get the residents name
     const residents = planet.residents.map(async (resident)=>{
       return getName(resident);
-    })
-    
-    return Promise.all(residents).then((residents)=>{
-      planet.residents = residents;
-      return planet;
     });
+    // Once its done add the names to the object
+    const res_residents = await Promise.all(residents)
+    planet.residents = res_residents;
+    
+    return planet;
 
   });
-  
-  return Promise.all(planets).then((data)=>{
-    return data;
-  })
+
+  //wait until all is done
+  return await Promise.all(planets); 
 
 }
 
